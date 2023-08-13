@@ -293,6 +293,23 @@ class FileHandler:
                                 state = 24
                             else:
                                 print("Error CoMF")
+                        case 25:
+                            if (flag): character = file.read(1)
+
+                            if (character == '\n' or character == ""):
+                                tokens.append(f"{line_index} <{type}, {lexeme}>")
+                                lexeme = ""
+                                state = 0
+                            elif (
+                                search(r'[^\w\d]', character) or # Símbolo
+                                search(r'\d', character) or # Dígito
+                                search(r'[a-zA-Z]', character) # Letra
+                            ): 
+                                type = "COM"
+                                lexeme += character
+                                state = 25
+                            else:
+                                print("Error CoMF")
 
                         case _:
                             print("Error")
