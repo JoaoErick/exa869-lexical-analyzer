@@ -135,7 +135,7 @@ class FileHandler:
                                 if (character == "\n"):
                                     state = 0
                                     lexeme = ""
-                                elif (character == " "):
+                                elif (character == " "): # TODO: Adicionar os demais delimitadores nesta condição
                                     state = 0
                                     
                                     if (lexeme != " "):
@@ -155,45 +155,119 @@ class FileHandler:
                             if (character == '+'):
                                 type = "ART"
                                 lexeme += character
-                                state = 24
                             else:
-                                state = 0
-                                tokens.append(f"{line_index} <{type}, {lexeme}>")
-                                lexeme = ""
                                 flag = False
+                                
+                            state = 0
+                            tokens.append(f"{line_index} <{type}, {lexeme}>")
+                            lexeme = ""
                         case 5:
                             if (flag): character = file.read(1)
 
-                            if(character == "-"):
+                            if (character == "-"):
                                 type = "ART"
                                 lexeme += character
-                                state = 25
-                            elif(character == ">"):
+                            elif (character == ">"):
                                 type = "DEL"
                                 lexeme += character
-                                state = 26
                             else:
+                                flag = False
+
+                            state = 0
+                            tokens.append(f"{line_index} <{type}, {lexeme}>")
+                            lexeme = ""
+                        case 6:
+                            if (flag): character = file.read(1)
+
+                            if (character == "/"):
+                                type = "COM"
+                                lexeme += character
+                            else:
+                                flag = False
+
+                            state = 0
+                            tokens.append(f"{line_index} <{type}, {lexeme}>")
+                            lexeme = ""
+                        case 7:
+                            if (flag): character = file.read(1)
+
+                            if (character == "*"):
+                                type = "COM"
+                                lexeme += character
+                            elif (character == "//"):
+                                type = "COM"
+                                lexeme += character
+                            else:
+                                flag = False
+
+                            state = 0
+                            tokens.append(f"{line_index} <{type}, {lexeme}>")
+                            lexeme = ""
+                        case 8 | 9 | 10 | 11:
+                            if (flag): character = file.read(1)
+
+                            if (character == "="):
+                                type = "REL"
+                                lexeme += character
+                            else:
+                                flag == False
+
+                            state = 0
+                            tokens.append(f"{line_index} <{type}, {lexeme}>")
+                            lexeme = ""
+                        case 12:
+                            if (flag): character = file.read(1)
+
+                            if (character == "&"):
+                                type = "LOG"
+                                lexeme += character
+                            else:
+                                print("Error TMF")
+
+                            state = 0
+                            tokens.append(f"{line_index} <{type}, {lexeme}>")
+                            lexeme = ""
+                        case 13:
+                            if (flag): character = file.read(1)
+
+                            if (character == "|"):
+                                type = "LOG"
+                                lexeme += character
+                            else:
+                                print("Error TMF")
+
+                            state = 0
+                            tokens.append(f"{line_index} <{type}, {lexeme}>")
+                            lexeme = ""
+                        case 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22:
+                            state = 0
+                            tokens.append(f"{line_index} <{type}, {lexeme}>")
+                            lexeme = ""
+                        case 23:
+                            if (flag): character = file.read(1)
+                            
+                            if (character == '"'):
                                 state = 0
+                                lexeme += character
                                 tokens.append(f"{line_index} <{type}, {lexeme}>")
                                 lexeme = ""
+                            elif (character == '\n' or character == ""):
+                                print("Error CMF")
+                                state = 0
+                                lexeme = ""
                                 flag = False
-                        case 24:
-                            # TODO  função generate_token
-                            tokens.append(f"{line_index} <{type}, {lexeme}>")
-                            lexeme = ""
-                            state = 0
-
-                        case 25:
-                            tokens.append(f"{line_index} <{type}, {lexeme}>")
-                            lexeme = ""
-                            state = 0
-
-                        case 26:
-                            tokens.append(f"{line_index} <{type}, {lexeme}>")
-                            lexeme = ""
-                            state = 0
+                            elif (
+                                search(r'[^\w\d]', character) or # Símbolo
+                                search(r'\d', character) or # Dígito
+                                search(r'[a-zA-Z]', character) # Letra
+                            ): 
+                                type = "CAC"
+                                lexeme += character
+                                state = 23
+                            else:
+                                print("Error case 23") # TODO: Erro de não é símbolo
                         case _:
-                            print("Error cases")
+                            print("Error")
                     
                     if (character == ""):
                         eof = True
