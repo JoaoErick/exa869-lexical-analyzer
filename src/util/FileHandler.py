@@ -67,7 +67,7 @@ class FileHandler:
                             if (character == "\n"):
                                 line_index += 1
 
-                            if (search(r'[^\w\d]', character)): # Símbolo
+                            if (search(r'[^\w\d]|_', character)): # Símbolo
                                 state = 1
                             elif (search(r'\d', character)):  # Dígito
                                 lexeme += character
@@ -330,7 +330,7 @@ class FileHandler:
                                 lexeme = ""
                                 flag = False
                             elif (
-                                search(r'[^\w\d]', character) or # Símbolo
+                                search(r'[^\w\d]|_', character) or # Símbolo
                                 search(r'\d', character) or # Dígito
                                 search(r'[a-zA-Z]', character) # Letra
                             ): 
@@ -338,7 +338,7 @@ class FileHandler:
                                 lexeme += character
                                 state = 23
                             else:
-                                print("Error case 23") # TODO: Erro de não é símbolo
+                                print(f"Error case 23. Line: {line_index}") # TODO: Erro de não é símbolo
                         case 24:
                             if (flag): character = file.read(1)
 
@@ -356,7 +356,7 @@ class FileHandler:
                                     type = "COM"
                                     state = 24
                             elif (
-                                search(r'[^\w\d]', character) or # Símbolo
+                                search(r'[^\w\d]|_', character) or # Símbolo
                                 search(r'\d', character) or # Dígito
                                 search(r'[a-zA-Z]', character) # Letra
                             ): 
@@ -374,7 +374,7 @@ class FileHandler:
                                 lexeme = ""
                                 state = 0
                             elif (
-                                search(r'[^\w\d]', character) or # Símbolo
+                                search(r'[^\w\d]|_', character) or # Símbolo
                                 search(r'\d', character) or # Dígito
                                 search(r'[a-zA-Z]', character) # Letra
                             ): 
