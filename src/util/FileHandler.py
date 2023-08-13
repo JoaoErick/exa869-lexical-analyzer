@@ -40,6 +40,7 @@ class FileHandler:
             with open(f"{self.path}/{self.file_queue[0]}.txt", "r") as file:
                 eof: bool = False
                 flag: bool = True
+                flag_dot_error: bool = False
                 state: int = 0
                 lexeme: str = ""
                 type: str = ""
@@ -58,6 +59,7 @@ class FileHandler:
                             if (search(r'[^\w\d]', character)): # Símbolo
                                 state = 1
                             elif (search(r'\d', character)):  # Dígito
+                                lexeme += character
                                 state = 2
                             elif (search(r'[a-zA-Z]', character)): # Letra
                                 state = 3
@@ -67,7 +69,6 @@ class FileHandler:
                                 print("Error! It's not a symbol.")
 
                             flag = True
-                            
                         case 1: # Símbolo
                             lexeme += character
                             
@@ -146,7 +147,30 @@ class FileHandler:
                                 else:
                                     print("Error")
                         case 2:
-                            pass
+                            type = "NRO"
+
+                            if (flag): character = file.read(1)
+
+                            if (search(r'\d', character)):  # Dígito
+                                lexeme += character
+                                state = 2
+                            elif (character == "."):
+                                type = "NRO"
+                                lexeme += character
+                                state = 26
+                            elif (
+                                character == " " or 
+                                character == "\n" or
+                                character == ""
+                            ): # TODO: Adicionar os demais delimitadores nesta condição
+                                if (lexeme != " "):
+                                    tokens.append(f"{line_index} <{type}, {lexeme}>")
+                                
+                                state = 0
+                                lexeme = ""
+                                flag = False
+                            else:
+                                print("Error NMF")
                         case 3:
                             pass
                         case 4:
@@ -310,9 +334,36 @@ class FileHandler:
                                 state = 25
                             else:
                                 print("Error CoMF")
+                        case 26:
+                            type = "NRO"
+                            
+                            if (flag): character = file.read(1)
 
+                            if (search(r'\d', character)):  # Dígito
+                                lexeme += character
+                                state = 26
+                            elif (
+                                character == " " or 
+                                character == "\n" or
+                                character == ""
+                            ): # TODO: Adicionar os demais delimitadores nesta condição
+                                if (flag_dot_error):
+                                    print("Error NMF")
+                                    state = 0
+                                    lexeme = ""
+                                    flag_dot_error = False
+                                else:
+                                    if (lexeme != " "):
+                                        tokens.append(f"{line_index} <{type}, {lexeme}>")
+                                    
+                                    state = 0
+                                    lexeme = ""
+                                    flag = False
+                            elif (character == "."):
+                                flag_dot_error = True
+                                state = 26
                         case _:
-                            print("Error")
+                            print("Error default case")
                     
                     if (character == ""):
                         eof = True
