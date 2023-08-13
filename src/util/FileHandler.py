@@ -283,7 +283,7 @@ class FileHandler:
                                 type = "REL"
                                 lexeme += character
                             else:
-                                flag == False
+                                flag = False
 
                             state = 0
                             tokens.append(f"{line_index} <{type}, {lexeme}>")
