@@ -10,9 +10,8 @@ def main():
 
     while len(file_handler.file_queue) > 0:
         content = file_handler.read_file()
-        if content:
-            file_handler.write_file(content=content)
-            file_handler.file_queue.pop(0)
+        file_handler.write_file(content=content)
+        file_handler.file_queue.pop(0)
 
 if __name__ == "__main__":
     main()
