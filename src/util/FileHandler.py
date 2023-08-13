@@ -52,6 +52,12 @@ class FileHandler:
                     "return", "if", "else", "then", "for", "read", "print", 
                     "void", "int", "real", "boolean", "string", "true", "false"
                 ]
+                delimiters: List[str] = [
+                    ";", ",", ".", "(", ")", "[", "]", "{", "}",
+                    "+", "-", "*", "/",
+                    "=", "<", ">",
+                    "!", "&", "|"
+                ]
 
                 while not eof:
                     match state:
@@ -142,7 +148,7 @@ class FileHandler:
                                 if (character == "\n"):
                                     state = 0
                                     lexeme = ""
-                                elif (character == " "): # TODO: Adicionar os demais delimitadores nesta condição
+                                elif (character == " "):
                                     state = 0
                                     
                                     if (lexeme != " "):
@@ -167,10 +173,13 @@ class FileHandler:
                             elif (
                                 character == " " or 
                                 character == "\n" or
-                                character == ""
-                            ): # TODO: Adicionar os demais delimitadores nesta condição
+                                character == "" or
+                                character in delimiters
+                            ):
                                 if (lexeme != " "):
-                                    tokens.append(f"{line_index} <{type}, {lexeme}>")
+                                    tokens.append(
+                                        f"{line_index} <{type}, {lexeme}>"
+                                    )
                                 
                                 state = 0
                                 lexeme = ""
@@ -194,17 +203,22 @@ class FileHandler:
                             elif (
                                 character == " " or 
                                 character == "\n" or
-                                character == ""
-                            ): # TODO: Adicionar os demais delimitadores nesta condição
+                                character == "" or
+                                character in delimiters
+                            ):
                                 flag = False
 
                                 if (lexeme in reserved_words):
-                                    tokens.append(f"{line_index} <{type}, {lexeme}>")
+                                    tokens.append(
+                                        f"{line_index} <{type}, {lexeme}>"
+                                    )
                                     state = 0
                                     lexeme = ""
                                 else:
                                     type = "IDE"
-                                    tokens.append(f"{line_index} <{type}, {lexeme}>")
+                                    tokens.append(
+                                        f"{line_index} <{type}, {lexeme}>"
+                                    )
                                     state = 0
                                     lexeme = ""
                         case 4:
@@ -356,6 +370,7 @@ class FileHandler:
 
                             if (character == '\n' or character == ""):
                                 tokens.append(f"{line_index} <{type}, {lexeme}>")
+                                flag = False
                                 lexeme = ""
                                 state = 0
                             elif (
@@ -376,11 +391,15 @@ class FileHandler:
                             if (search(r'\d', character)):  # Dígito
                                 lexeme += character
                                 state = 26
+                            elif (character == "."):
+                                flag_dot_error = True
+                                state = 26
                             elif (
                                 character == " " or 
                                 character == "\n" or
-                                character == ""
-                            ): # TODO: Adicionar os demais delimitadores nesta condição
+                                character == "" or
+                                character in delimiters
+                            ):
                                 if (flag_dot_error):
                                     print("Error NMF")
                                     state = 0
@@ -388,14 +407,13 @@ class FileHandler:
                                     flag_dot_error = False
                                 else:
                                     if (lexeme != " "):
-                                        tokens.append(f"{line_index} <{type}, {lexeme}>")
+                                        tokens.append(
+                                            f"{line_index} <{type}, {lexeme}>"
+                                        )
                                     
                                     state = 0   
                                     lexeme = ""
                                     flag = False
-                            elif (character == "."):
-                                flag_dot_error = True
-                                state = 26
                         case _:
                             print("Error default case")
                     
