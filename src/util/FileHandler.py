@@ -194,15 +194,16 @@ class FileHandler:
                             if (character == "*"):
                                 type = "COM"
                                 lexeme += character
-                            elif (character == "//"):
+                                state = 24
+                            elif (character == "/"):
                                 type = "COM"
                                 lexeme += character
+                                state = 25
                             else:
                                 flag = False
-
-                            state = 0
-                            tokens.append(f"{line_index} <{type}, {lexeme}>")
-                            lexeme = ""
+                                state = 0
+                                tokens.append(f"{line_index} <{type}, {lexeme}>")
+                                lexeme = ""
                         case 8 | 9 | 10 | 11:
                             if (flag): character = file.read(1)
 
@@ -266,6 +267,33 @@ class FileHandler:
                                 state = 23
                             else:
                                 print("Error case 23") # TODO: Erro de não é símbolo
+                        case 24:
+                            if (flag): character = file.read(1)
+
+                            if (character == "*"):
+                                lexeme += character
+                                character = file.read(1)
+                                lexeme += character
+                                
+                                if (character == "/"):
+                                    type = "COM"
+                                    tokens.append(f"{line_index} <{type}, {lexeme}>")
+                                    lexeme = ""
+                                    state = 0
+                                else:
+                                    type = "COM"
+                                    state = 24
+                            elif (
+                                search(r'[^\w\d]', character) or # Símbolo
+                                search(r'\d', character) or # Dígito
+                                search(r'[a-zA-Z]', character) # Letra
+                            ): 
+                                type = "COM"
+                                lexeme += character
+                                state = 24
+                            else:
+                                print("Error CoMF")
+
                         case _:
                             print("Error")
                     
