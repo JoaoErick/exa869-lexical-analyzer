@@ -47,6 +47,11 @@ class FileHandler:
                 tokens: List[str] = []
                 character: str = ""
                 line_index: str = 1
+                reserved_words: List[str] = [
+                    "variables", "const", "class", "methods","objects", "main", 
+                    "return", "if", "else", "then", "for", "read", "print", 
+                    "void", "int", "real", "boolean", "string", "true", "false"
+                ]
 
                 while not eof:
                     match state:
@@ -62,6 +67,7 @@ class FileHandler:
                                 lexeme += character
                                 state = 2
                             elif (search(r'[a-zA-Z]', character)): # Letra
+                                lexeme += character
                                 state = 3
                             elif (character == ""):
                                 pass # TODO: Ver se não tem um jeito melhor
@@ -172,7 +178,35 @@ class FileHandler:
                             else:
                                 print("Error NMF")
                         case 3:
-                            pass
+                            if (flag): character = file.read(1)
+
+                            if (
+                                search(r'\d', character) or
+                                character == "_"
+                            ):
+                                type = "IDE"
+                                lexeme += character
+                                state = 3
+                            elif (search(r'[a-zA-Z]', character)):
+                                type = "PRE"
+                                lexeme += character
+                                state = 3
+                            elif (
+                                character == " " or 
+                                character == "\n" or
+                                character == ""
+                            ): # TODO: Adicionar os demais delimitadores nesta condição
+                                flag = False
+
+                                if (lexeme in reserved_words):
+                                    tokens.append(f"{line_index} <{type}, {lexeme}>")
+                                    state = 0
+                                    lexeme = ""
+                                else:
+                                    type = "IDE"
+                                    tokens.append(f"{line_index} <{type}, {lexeme}>")
+                                    state = 0
+                                    lexeme = ""
                         case 4:
                             if (flag): character = file.read(1)
 
@@ -356,7 +390,7 @@ class FileHandler:
                                     if (lexeme != " "):
                                         tokens.append(f"{line_index} <{type}, {lexeme}>")
                                     
-                                    state = 0
+                                    state = 0   
                                     lexeme = ""
                                     flag = False
                             elif (character == "."):
