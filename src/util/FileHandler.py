@@ -56,7 +56,8 @@ class FileHandler:
                     ";", ",", ".", "(", ")", "[", "]", "{", "}",
                     "+", "-", "*", "/",
                     "=", "<", ">",
-                    "!", "&", "|"
+                    "!", "&", "|",
+                    "\t"
                 ]
 
                 while not eof:
@@ -145,7 +146,7 @@ class FileHandler:
                                 type = "CAC"
                                 state = 23
                             else:
-                                if (character == "\n"):
+                                if (character == "\n" or character == "\t"):
                                     state = 0
                                     lexeme = ""
                                 elif (character == " "):
@@ -186,6 +187,9 @@ class FileHandler:
                                 flag = False
                             else:
                                 print(f"Error NMF. Line: {line_index}")
+                                state = 0
+                                lexeme = ""
+                                flag = True
                         case 3:
                             if (flag): character = file.read(1)
 
@@ -221,6 +225,14 @@ class FileHandler:
                                     )
                                     state = 0
                                     lexeme = ""
+                            else:
+                                if(type == "IDE"):
+                                    print(f"Error IMF. Line: {line_index}")
+                                else:
+                                    print(f"Error TMF. Line: {line_index}")
+                                state = 0
+                                flag = True
+                                lexeme = ""
                         case 4:
                             if (flag): character = file.read(1)
 
