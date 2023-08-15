@@ -78,7 +78,7 @@ class FileHandler:
                             elif (character == ""):
                                 pass # TODO: Ver se não tem um jeito melhor
                             else:
-                                print(f"Error! It's not a symbol. Line: {line_index}")
+                                print(f"Error! It's not a symbol. In {self.file_queue[0]} file line: {line_index}")
 
                             flag = True
                         case 1: # Símbolo
@@ -157,7 +157,7 @@ class FileHandler:
                                     lexeme = ""
                                     flag = True
                                 else:
-                                    print(f"Error! Not a known symbol. Line: {line_index}")
+                                    print(f"Error! Not a known symbol. In {self.file_queue[0]} file line: {line_index}")
                         case 2:
                             type = "NRO"
 
@@ -185,7 +185,7 @@ class FileHandler:
                                 lexeme = ""
                                 flag = False
                             else:
-                                print(f"Error NMF. Line: {line_index}")
+                                print(f"Error NMF. In {self.file_queue[0]} file line: {line_index}")
                                 state = 0
                                 lexeme = ""
                                 flag = True
@@ -226,9 +226,9 @@ class FileHandler:
                                     lexeme = ""
                             else:
                                 if(type == "IDE"):
-                                    print(f"Error IMF. Line: {line_index}")
+                                    print(f"Error IMF. In {self.file_queue[0]} file line: {line_index}")
                                 else:
-                                    print(f"Error TMF. Line: {line_index}")
+                                    print(f"Error TMF. In {self.file_queue[0]} file line: {line_index}")
                                 state = 0
                                 flag = True
                                 lexeme = ""
@@ -306,7 +306,7 @@ class FileHandler:
                                 type = "LOG"
                                 lexeme += character
                             else:
-                                print(f"Error TMF. Line: {line_index}")
+                                print(f"Error TMF. In {self.file_queue[0]} file line: {line_index}")
 
                             state = 0
                             tokens.append(f"{line_index} <{type}, {lexeme}>")
@@ -318,7 +318,7 @@ class FileHandler:
                                 type = "LOG"
                                 lexeme += character
                             else:
-                                print(f"Error TMF. Line: {line_index}")
+                                print(f"Error TMF. In {self.file_queue[0]} file line: {line_index}")
 
                             state = 0
                             tokens.append(f"{line_index} <{type}, {lexeme}>")
@@ -336,7 +336,7 @@ class FileHandler:
                                 tokens.append(f"{line_index} <{type}, {lexeme}>")
                                 lexeme = ""
                             elif (character == '\n' or character == ""):
-                                print(f"Error CMF. Line: {line_index}")
+                                print(f"Error CMF. In {self.file_queue[0]} file line: {line_index}")
                                 state = 0
                                 lexeme = ""
                                 flag = False
@@ -349,7 +349,7 @@ class FileHandler:
                                 lexeme += character
                                 state = 23
                             else:
-                                print(f"Error CMF. Line: {line_index}")
+                                print(f"Error CMF. In {self.file_queue[0]} file line: {line_index}")
                         case 24:
                             if (flag): character = file.read(1)
 
@@ -378,7 +378,7 @@ class FileHandler:
                                 lexeme += character
                                 state = 24
                             else:
-                                print(f"Error CoMF. Line: {line_index}")
+                                print(f"Error CoMF. In {self.file_queue[0]} file line: {line_index}")
                         case 25:
                             if (flag): character = file.read(1)
 
@@ -397,7 +397,7 @@ class FileHandler:
                                 lexeme += character
                                 state = 25
                             else:
-                                print(f"Error CoMF. Line: {line_index}")
+                                print(f"Error CoMF. In {self.file_queue[0]} file line: {line_index}")
                         case 26:
                             type = "NRO"
                             
@@ -416,7 +416,7 @@ class FileHandler:
                                 character in delimiters
                             ):
                                 if (flag_dot_error):
-                                    print(f"Error NMF. Line: {line_index}")
+                                    print(f"Error NMF. In {self.file_queue[0]} file line: {line_index}")
                                     state = 0
                                     lexeme = ""
                                     flag_dot_error = False
@@ -430,7 +430,7 @@ class FileHandler:
                                     lexeme = ""
                                     flag = False
                         case _:
-                            print(f"Error default case. Line: {line_index}")
+                            print(f"Error default case. In {self.file_queue[0]} file line: {line_index}")
                     
                     if (character == ""):
                         eof = True
