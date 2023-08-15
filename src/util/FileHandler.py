@@ -225,7 +225,7 @@ class FileHandler:
                                     state = 0
                                     lexeme = ""
                             else:
-                                if(type == "IDE"):
+                                if (type == "IDE"):
                                     print(f"Error IMF. In {self.file_queue[0]} file line: {line_index}")
                                 else:
                                     print(f"Error TMF. In {self.file_queue[0]} file line: {line_index}")
