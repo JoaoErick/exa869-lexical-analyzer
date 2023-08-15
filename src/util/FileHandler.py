@@ -360,12 +360,14 @@ class FileHandler:
                                 
                                 if (character == "/"):
                                     type = "COM"
-                                    tokens.append(f"{line_index} <{type}, {lexeme}>")
+                                    # tokens.append(f"{line_index} <{type}, {lexeme}>") # TODO: Apagar
                                     lexeme = ""
                                     state = 0
                                 else:
                                     type = "COM"
                                     state = 24
+                            elif (character == "\n"):
+                                line_index += 1
                             elif (
                                 search(r'[^\w\d]|_', character) or # Símbolo
                                 search(r'\d', character) or # Dígito
@@ -381,7 +383,7 @@ class FileHandler:
                             if (flag): character = file.read(1)
 
                             if (character == '\n' or character == ""):
-                                tokens.append(f"{line_index} <{type}, {lexeme}>")
+                                # tokens.append(f"{line_index} <{type}, {lexeme}>") # TODO: Apagar
                                 flag = False
                                 lexeme = ""
                                 state = 0
