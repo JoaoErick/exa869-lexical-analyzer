@@ -1,7 +1,6 @@
 from os import listdir
 from re import search
 from typing import List
-from re import search
 
 class FileHandler:
     """ Classe para lidar com as operações de arquivos de texto.
@@ -370,7 +369,8 @@ class FileHandler:
                             elif (
                                 search(r'[^\w\d]|_', character) or # Símbolo
                                 search(r'\d', character) or # Dígito
-                                search(r'[a-zA-Z]', character) # Letra
+                                search(r'[a-zA-Z]', character) or # Letra
+                                search(r'[À-ÖØ-öø-ÿ]', character) # Letras com acentuação
                             ): 
                                 type = "COM"
                                 lexeme += character
@@ -388,7 +388,8 @@ class FileHandler:
                             elif (
                                 search(r'[^\w\d]|_', character) or # Símbolo
                                 search(r'\d', character) or # Dígito
-                                search(r'[a-zA-Z]', character) # Letra
+                                search(r'[a-zA-Z]', character) or # Letra
+                                search(r'[À-ÖØ-öø-ÿ]', character) # Letras com acentuação
                             ): 
                                 type = "COM"
                                 lexeme += character
