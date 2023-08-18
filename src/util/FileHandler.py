@@ -4,15 +4,15 @@ from typing import List
 
 class FileHandler:
     """ Classe para lidar com as operações de arquivos de texto.
-
-    Parameters
-    ----------
-    path: :class:`str`
-        Caminho relativo dos arquivos de texto.
     """
 
     def __init__(self, path: str):
         """ Método construtor.
+
+        Parameters
+        ----------
+        path: :class:`str`
+            Caminho relativo do(s) arquivo(s) de texto.
         """
 
         self.path = path
