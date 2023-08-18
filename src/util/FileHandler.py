@@ -41,6 +41,8 @@ class FileHandler:
 
         Parameters
         ----------
+        file_name: :class:`str`
+            Nome do arquivo.
         content: :class:`List[str]`
             Lista de caracteres
         """

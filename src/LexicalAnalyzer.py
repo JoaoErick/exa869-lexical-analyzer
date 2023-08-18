@@ -2,14 +2,19 @@ from typing import List
 from re import search
 
 class LexicalAnalyzer:
+    """ Classe responsável por prover métodos para realizar a análise léxica.
+    """
 
     def generate_tokens(self, path: str, file_name: str) -> List[str] | None:
-        """ Realiza a leitura do conteúdo de um arquivo .txt presente na fila 
-        e o retorna.
+        """ Realiza a análise léxica de um determinado arquivo, e gera uma lista
+        com os tokens correspondentes.
 
         Parameters
         ----------
-        # TODO: colocar parâmetros
+        path: :class:`str`
+            Caminho relativo do arquivo.
+        file_name: :class:`str`
+            Nome do arquivo.
         
         Returns
         -------
