@@ -8,7 +8,7 @@ def main():
     path: str = f"{current_directory}/files/"
     file_handler: FileHandler = FileHandler(path)
     lexical_analyzer: LexicalAnalyzer = LexicalAnalyzer()
-    file_names: List[str] = file_handler.get_filenames()
+    file_names: List[str] = file_handler.get_file_names()
 
     for file_name in file_names:
         tokens = lexical_analyzer.generate_tokens(path, file_name)

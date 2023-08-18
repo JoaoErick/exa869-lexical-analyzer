@@ -17,7 +17,7 @@ class FileHandler:
 
         self.path = path
     
-    def get_filenames(self) -> List[str]:
+    def get_file_names(self) -> List[str]:
         """ Faz a leitura dos nomes de todos os arquivos de entrada.
 
         Returns
@@ -27,9 +27,9 @@ class FileHandler:
 
         file_queue: List[str] = []
         
-        for filename in listdir(self.path):
-            if search(r'^(?!.*-saida).*\.txt', filename):
-                file_queue.append(filename.split(".")[0])
+        for file_name in listdir(self.path):
+            if search(r'^(?!.*-saida).*\.txt', file_name):
+                file_queue.append(file_name.split(".")[0])
 
         return file_queue
 
