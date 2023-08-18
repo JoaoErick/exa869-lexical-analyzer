@@ -1,18 +1,18 @@
+from typing import List
 from util import FileHandler
 from pathlib import Path
+from LexicalAnalyzer import LexicalAnalyzer
 
 def main():
-    current_directory = Path(__file__).parent.resolve()
-    file_handler = FileHandler(path=f"{current_directory}/files/")
-    file_handler.get_filenames()
+    current_directory: Path = Path(__file__).parent.resolve()
+    path: str = f"{current_directory}/files/"
 
-    content = []
+    file_handler: FileHandler = FileHandler(path)
+    lexical_analyzer: LexicalAnalyzer = LexicalAnalyzer()
 
-    while len(file_handler.file_queue) > 0:
-        content = file_handler.read_file()
-        if content:
-            file_handler.write_file(content=content)
-            file_handler.file_queue.pop(0)
+    for file_name in file_handler.get_file_names():
+        tokens = lexical_analyzer.generate_tokens(path, file_name)
+        file_handler.write_file(file_name, tokens)
 
 if __name__ == "__main__":
     main()
