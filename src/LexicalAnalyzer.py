@@ -25,6 +25,7 @@ class LexicalAnalyzer:
             eof: bool = False
             flag: bool = True
             flag_character_error: bool = False
+            flag_nmf_comment: bool = False # TODO: Ver se n tem um nome melhor
             state: int = 0
             lexeme: str = ""
             double_delimiter: str = ""
@@ -32,7 +33,8 @@ class LexicalAnalyzer:
             tokens: List[str] = []
             errors_tokens: List[str] = ["\n"]
             character: str = ""
-            line_index: str = 1
+            line_index: int = 1
+            block_comment_start_line: int = 0
             reserved_words: List[str] = [
                 "variables", "const", "class", "methods","objects", "main", 
                 "return", "if", "else", "then", "for", "read", "print", 
@@ -283,18 +285,40 @@ class LexicalAnalyzer:
                         if (flag): character = file.read(1)
 
                         if (character == "*"):
-                            type = "COM"
+                            block_comment_start_line = line_index
                             lexeme += character
+                            
+                            if (flag_nmf_comment):
+                                # Removendo o '/' do lexema, para gerar o token de erro
+                                type = "NFM"
+                                errors_tokens.append(f"{line_index} <{type}, {lexeme[:len(lexeme) - 2]}>")
+                                lexeme = lexeme.split(".")[1]
+                                flag_nmf_comment = False
+
+                            type = "COM"
                             state = 24
                         elif (character == "/"):
-                            type = "COM"
                             lexeme += character
+
+                            if (flag_nmf_comment):
+                                # Removendo o '/' do lexema, para gerar o token de erro
+                                type = "NFM"
+                                errors_tokens.append(f"{line_index} <{type}, {lexeme[:len(lexeme) - 2]}>")
+                                lexeme = lexeme.split(".")[1]
+                                flag_nmf_comment = False
+
+                            type = "COM"
                             state = 25
                         else:
-                            flag = False
-                            state = 0
-                            tokens.append(f"{line_index} <{type}, {lexeme}>")
-                            lexeme = ""
+                            if (flag_nmf_comment):
+                                state = 26
+                                flag_nmf_comment = False
+                                flag = False
+                            else:
+                                flag = False
+                                state = 0
+                                tokens.append(f"{line_index} <{type}, {lexeme}>")
+                                lexeme = ""
                     case 8 | 9 | 10 | 11:
                         if (flag): character = file.read(1)
 
@@ -415,6 +439,7 @@ class LexicalAnalyzer:
                                 type = "COM"
                                 state = 24
                         elif (character == "\n"):
+                            state = 24
                             line_index += 1
                         elif (
                             search(r'[^\w\d]|_', character) or # Símbolo
@@ -423,10 +448,30 @@ class LexicalAnalyzer:
                             search(r'[À-ÖØ-öø-ÿ]', character) # Letras com acentuação
                         ): 
                             type = "COM"
-                            lexeme += character
                             state = 24
+                            lexeme += character
                         else:
-                            print(f"Error CoMF. In {file_name} file line: {line_index}")
+                            if (flag_nmf_comment):
+                                state = 26
+                                flag_nmf_comment = False
+                                flag = False
+                            else:
+                                type = "CoMF"
+
+                                if (block_comment_start_line < line_index):
+                                    print(f"Error CoMF. In {file_name} file line: [{block_comment_start_line}-{line_index}]")
+                                    errors_tokens.append(
+                                        f"[{block_comment_start_line}-{line_index}] <{type}, {lexeme}>"
+                                    )
+                                else:
+                                    print(f"Error CoMF. In {file_name} file line: {line_index}")
+                                    errors_tokens.append(
+                                        f"{line_index} <{type}, {lexeme}>"
+                                    )
+                                
+                                state = 0
+                                lexeme = ""
+                                flag = True
                     case 25:
                         if (flag): character = file.read(1)
 
@@ -444,7 +489,19 @@ class LexicalAnalyzer:
                             lexeme += character
                             state = 25
                         else:
-                            print(f"Error CoMF. In {file_name} file line: {line_index}")
+                            if (flag_nmf_comment):
+                                state = 26
+                                flag_nmf_comment = False
+                                flag = False
+                            else:
+                                print(f"Error CoMF. In {file_name} file line: {line_index}")
+                                type = "CoMF"
+                                errors_tokens.append(
+                                    f"{line_index} <{type}, {lexeme}>"
+                                )
+                                state = 0
+                                lexeme = ""
+                                flag = True
                     case 26:
                         type = "NRO"
                         
@@ -500,8 +557,14 @@ class LexicalAnalyzer:
                             # Se for delimitador após ponto
                             if (character in delimiters):
                                 if (lexeme[-1] == "."):
-                                    state = 26
-                                    lexeme += character
+                                    if (character == "/"):
+                                        flag_nmf_comment = True
+                                        state = 7
+                                        lexeme += character
+                                    else:
+                                        state = 26
+                                        lexeme += character
+
                                     continue
 
                             if (not search(r'^-?\d+(?:\.\d+)$', lexeme)):
