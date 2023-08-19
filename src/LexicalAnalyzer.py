@@ -24,7 +24,7 @@ class LexicalAnalyzer:
         with open(f"{path}/{file_name}.txt", "r") as file:
             eof: bool = False
             flag: bool = True
-            flag_dot_error: bool = False
+            # flag_dot_error: bool = False
             state: int = 0
             lexeme: str = ""
             double_delimiter: str = ""
@@ -144,8 +144,7 @@ class LexicalAnalyzer:
                                 flag = True
                             else:
                                 print(f"Error! Not a known symbol. In {file_name} file line: {line_index}")
-                                state = 0
-                                lexeme = ""
+                                state = 27
                                 flag = True
                     case 2:
                         type = "NRO"
@@ -297,6 +296,17 @@ class LexicalAnalyzer:
                             tokens.append(f"{line_index} <{type}, {lexeme}>")
                             state = 0
                             lexeme = ""
+                        elif (
+                            character == " " or 
+                            character == "\n" or
+                            character == "" or
+                            character in delimiters
+                        ):
+                            type = "TMF"
+                            errors_tokens.append(f"{line_index} <{type}, {lexeme}>")
+                            state = 0
+                            lexeme = ""
+                            flag = False
                         else:
                             print(f"Error TMF. In {file_name} file line: {line_index}")
                             lexeme += character
@@ -310,6 +320,17 @@ class LexicalAnalyzer:
                             tokens.append(f"{line_index} <{type}, {lexeme}>")
                             state = 0    
                             lexeme = ""
+                        elif (
+                            character == " " or 
+                            character == "\n" or
+                            character == "" or
+                            character in delimiters
+                        ):
+                            type = "TMF"
+                            errors_tokens.append(f"{line_index} <{type}, {lexeme}>")
+                            state = 0
+                            lexeme = ""
+                            flag = False
                         else:
                             print(f"Error TMF. In {file_name} file line: {line_index}")
                             lexeme += character
@@ -399,7 +420,7 @@ class LexicalAnalyzer:
                             lexeme += character
                             state = 26
                         elif (character == "."):
-                            flag_dot_error = True
+                            # flag_dot_error = True
                             lexeme += character
                             state = 26
                         elif (character == "&" or character == "|"):
@@ -413,7 +434,7 @@ class LexicalAnalyzer:
                                     # Removendo delimitador duplo do lexema.
                                     lexeme = lexeme[:len(lexeme) - 2]
 
-                                    if (flag_dot_error):
+                                    if (not search(r'^-?\d+(?:\.\d+)$', lexeme)):
                                         type = "NMF"
                                         errors_tokens.append(
                                             f"{line_index} <{type}, {lexeme}>"
@@ -437,22 +458,28 @@ class LexicalAnalyzer:
                                     double_delimiter = ""
                             else:
                                 state = 26
-                            
                         elif (
                             character == " " or 
                             character == "\n" or
                             character == "" or
                             character in delimiters
                         ):
-                            if (flag_dot_error):
+                            # Se for delimitador após ponto
+                            if (character in delimiters):
+                                if (lexeme[-1] == "."):
+                                    state = 26
+                                    lexeme += character
+                                    continue
+
+                            if (not search(r'^-?\d+(?:\.\d+)$', lexeme)):
                                 print(f"Error NMF. In {file_name} file line: {line_index}")
+                                
                                 type = "NMF"
                                 errors_tokens.append(
                                     f"{line_index} <{type}, {lexeme}>"
                                 )
                                 state = 0
                                 lexeme = ""
-                                flag_dot_error = False
                                 flag = False
                             else:
                                 if (lexeme != " "):
@@ -466,7 +493,7 @@ class LexicalAnalyzer:
                         else:
                             state = 26
                             lexeme += character
-                            flag_dot_error = True
+                            # flag_dot_error = True
                     case 27:
                         if (flag): character = file.read(1)
 
