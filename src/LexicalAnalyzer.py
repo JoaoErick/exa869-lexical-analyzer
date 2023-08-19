@@ -24,6 +24,7 @@ class LexicalAnalyzer:
         with open(f"{path}/{file_name}.txt", "r") as file:
             eof: bool = False
             flag: bool = True
+            flag_character_error: bool = False
             state: int = 0
             lexeme: str = ""
             double_delimiter: str = ""
@@ -63,7 +64,10 @@ class LexicalAnalyzer:
                         elif (character == ""):
                             pass # TODO: Ver se não tem um jeito melhor
                         else:
-                            print(f"Error! It's not a symbol. In {file_name} file line: {line_index}")
+                            print(f"Error It's not a symbol. In {file_name} file line: {line_index}")
+                            state = 27
+                            lexeme += character
+                            flag = True
 
                         flag = True
                     case 1: # Símbolo
@@ -142,7 +146,7 @@ class LexicalAnalyzer:
                                 lexeme = ""
                                 flag = True
                             else:
-                                print(f"Error! Not a known symbol. In {file_name} file line: {line_index}")
+                                print(f"Error Not a known symbol. In {file_name} file line: {line_index}")
                                 state = 27
                                 flag = True
                     case 2:
@@ -199,16 +203,32 @@ class LexicalAnalyzer:
                             flag = False
 
                             if (lexeme in reserved_words):
-                                tokens.append(
-                                    f"{line_index} <{type}, {lexeme}>"
-                                )
+                                if (flag_character_error):
+                                    type = "TMF"
+                                    errors_tokens.append(
+                                        f"{line_index} <{type}, {lexeme}>"
+                                    )
+                                    flag_character_error = False
+                                else:
+                                    tokens.append(
+                                        f"{line_index} <{type}, {lexeme}>"
+                                    )
+
                                 state = 0
                                 lexeme = ""
                             else:
-                                type = "IDE"
-                                tokens.append(
-                                    f"{line_index} <{type}, {lexeme}>"
-                                )
+                                if (flag_character_error):
+                                    type = "IMF"
+                                    errors_tokens.append(
+                                        f"{line_index} <{type}, {lexeme}>"
+                                    )
+                                    flag_character_error = False
+                                else:
+                                    type = "IDE"
+                                    tokens.append(
+                                        f"{line_index} <{type}, {lexeme}>"
+                                    )
+
                                 state = 0
                                 lexeme = ""
                         else:
@@ -216,9 +236,10 @@ class LexicalAnalyzer:
                                 print(f"Error IMF. In {file_name} file line: {line_index}")
                             else:
                                 print(f"Error TMF. In {file_name} file line: {line_index}")
-                            state = 0
-                            flag = True
-                            lexeme = ""
+
+                            flag_character_error = True
+                            state = 3
+                            lexeme += character
                     case 4:
                         if (flag): character = file.read(1)
 
@@ -343,12 +364,25 @@ class LexicalAnalyzer:
                         if (flag): character = file.read(1)
                         
                         if (character == '"'):
-                            state = 0
                             lexeme += character
-                            tokens.append(f"{line_index} <{type}, {lexeme}>")
+
+                            if (flag_character_error):
+                                type = "TMF"
+                                errors_tokens.append(
+                                    f"{line_index} <{type}, {lexeme}>"
+                                )
+                                flag_character_error = False
+                            else:
+                                tokens.append(f"{line_index} <{type}, {lexeme}>")
+
+                            state = 0
                             lexeme = ""
                         elif (character == '\n' or character == ""):
                             print(f"Error CMF. In {file_name} file line: {line_index}")
+                            type = "CMF"
+                            errors_tokens.append(
+                                f"{line_index} <{type}, {lexeme}>"
+                            )
                             state = 0
                             lexeme = ""
                             flag = False
@@ -358,10 +392,13 @@ class LexicalAnalyzer:
                             search(r'[a-zA-Z]', character) # Letra
                         ): 
                             type = "CAC"
-                            lexeme += character
                             state = 23
+                            lexeme += character
                         else:
                             print(f"Error CMF. In {file_name} file line: {line_index}")
+                            flag_character_error = True
+                            state = 23
+                            lexeme += character
                     case 24:
                         if (flag): character = file.read(1)
 
