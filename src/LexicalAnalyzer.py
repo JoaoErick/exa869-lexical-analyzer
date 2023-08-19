@@ -41,7 +41,8 @@ class LexicalAnalyzer:
                 "+", "-", "*", "/",
                 "=", "<", ">",
                 "!", "&", "|",
-                "\t"
+                "\t",
+                '"'
             ]
 
             while not eof:
@@ -143,6 +144,9 @@ class LexicalAnalyzer:
                                 flag = True
                             else:
                                 print(f"Error! Not a known symbol. In {file_name} file line: {line_index}")
+                                state = 0
+                                lexeme = ""
+                                flag = True
                     case 2:
                         type = "NRO"
 
@@ -414,6 +418,11 @@ class LexicalAnalyzer:
                                 state = 0   
                                 lexeme = ""
                                 flag = False
+                        else:
+                            print(f"Error NMF. In {file_name} file line: {line_index}")
+                            state = 0
+                            lexeme = ""
+                            flag_dot_error = False
                     case _:
                         print(f"Error default case. In {file_name} file line: {line_index}")
                 
