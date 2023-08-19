@@ -1,11 +1,11 @@
-from typing import List
+from typing import List, Tuple
 from re import search
 
 class LexicalAnalyzer:
     """ Classe responsável por prover métodos para realizar a análise léxica.
     """
 
-    def generate_tokens(self, path: str, file_name: str) -> List[str] | None:
+    def generate_tokens(self, path: str, file_name: str) -> Tuple[List[str], List[str]] | None:
         """ Realiza a análise léxica de um determinado arquivo, e gera uma lista
         com os tokens correspondentes.
 
@@ -27,8 +27,10 @@ class LexicalAnalyzer:
             flag_dot_error: bool = False
             state: int = 0
             lexeme: str = ""
+            double_delimiter: str = ""
             type: str = ""
             tokens: List[str] = []
+            errors_tokens: List[str] = ["\n"]
             character: str = ""
             line_index: str = 1
             reserved_words: List[str] = [
@@ -40,9 +42,7 @@ class LexicalAnalyzer:
                 ";", ",", ".", "(", ")", "[", "]", "{", "}",
                 "+", "-", "*", "/",
                 "=", "<", ">",
-                "!", "&", "|",
-                "\t",
-                '"'
+                "!", "\t", '"'
             ]
 
             while not eof:
@@ -397,7 +397,44 @@ class LexicalAnalyzer:
                             state = 26
                         elif (character == "."):
                             flag_dot_error = True
+                            lexeme += character
                             state = 26
+                        elif (character == "&" or character == "|"):
+                            double_delimiter += character
+                            lexeme += character
+
+                            if (len(double_delimiter) == 2):
+                                if (double_delimiter == "&&" or 
+                                    double_delimiter == "||"
+                                ):
+                                    # Removendo delimitador duplo do lexema.
+                                    lexeme = lexeme[:len(lexeme) - 2]
+
+                                    if (flag_dot_error):
+                                        type = "NMF"
+                                        errors_tokens.append(
+                                            f"{line_index} <{type}, {lexeme}>"
+                                        )
+                                    else:
+                                        tokens.append(
+                                            f"{line_index} <{type}, {lexeme}>"
+                                        )
+                                    
+                                    # Gera o token do delimitador duplo
+                                    tokens.append(
+                                        f"{line_index} <LOG, {double_delimiter}>"
+                                    )
+
+                                    lexeme = ""
+                                    double_delimiter = ""
+                                    state = 0
+                                    flag = True
+                                else:
+                                    state = 26
+                                    double_delimiter = ""
+                            else:
+                                state = 26
+                            
                         elif (
                             character == " " or 
                             character == "\n" or
@@ -406,9 +443,14 @@ class LexicalAnalyzer:
                         ):
                             if (flag_dot_error):
                                 print(f"Error NMF. In {file_name} file line: {line_index}")
+                                type = "NMF"
+                                errors_tokens.append(
+                                    f"{line_index} <{type}, {lexeme}>"
+                                )
                                 state = 0
                                 lexeme = ""
                                 flag_dot_error = False
+                                flag = False
                             else:
                                 if (lexeme != " "):
                                     tokens.append(
@@ -419,14 +461,13 @@ class LexicalAnalyzer:
                                 lexeme = ""
                                 flag = False
                         else:
-                            print(f"Error NMF. In {file_name} file line: {line_index}")
-                            state = 0
-                            lexeme = ""
-                            flag_dot_error = False
+                            state = 26
+                            lexeme += character
+                            flag_dot_error = True
                     case _:
                         print(f"Error default case. In {file_name} file line: {line_index}")
                 
                 if (character == ""):
                     eof = True
 
-        return tokens
+        return (tokens, errors_tokens)
