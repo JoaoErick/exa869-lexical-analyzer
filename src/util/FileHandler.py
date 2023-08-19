@@ -33,7 +33,12 @@ class FileHandler:
 
         return file_queue
 
-    def write_file(self, file_name: str, content: List[str]) -> None:
+    def write_file(
+        self, 
+        file_name: str, 
+        content: List[str], 
+        write_mode: str = "w"
+    ) -> None:
         """ Realiza a escrita de uma lista de caracteres em um arquivo .txt.
 
         O arquivo de saída possuirá o mesmo nome do arquivo de entrada com o 
@@ -45,8 +50,10 @@ class FileHandler:
             Nome do arquivo.
         content: :class:`List[str]`
             Lista de caracteres
+        write_mode: :class:`str`
+            Modo de escrita do arquivo. Por padrão é utilizado o 'w'.
         """
-        with open(f"{self.path}/{file_name}-saida.txt", "w") as file:
+        with open(f"{self.path}/{file_name}-saida.txt", write_mode) as file:
             for index, character in enumerate(content):
                 file.write(character)
                 if index < len(content) - 1:
