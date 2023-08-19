@@ -24,7 +24,6 @@ class LexicalAnalyzer:
         with open(f"{path}/{file_name}.txt", "r") as file:
             eof: bool = False
             flag: bool = True
-            # flag_dot_error: bool = False
             state: int = 0
             lexeme: str = ""
             double_delimiter: str = ""
@@ -373,7 +372,6 @@ class LexicalAnalyzer:
                             
                             if (character == "/"):
                                 type = "COM"
-                                # tokens.append(f"{line_index} <{type}, {lexeme}>") # TODO: Apagar
                                 lexeme = ""
                                 state = 0
                             else:
@@ -396,7 +394,6 @@ class LexicalAnalyzer:
                         if (flag): character = file.read(1)
 
                         if (character == '\n' or character == ""):
-                            # tokens.append(f"{line_index} <{type}, {lexeme}>") # TODO: Apagar
                             flag = False
                             lexeme = ""
                             state = 0
@@ -420,7 +417,6 @@ class LexicalAnalyzer:
                             lexeme += character
                             state = 26
                         elif (character == "."):
-                            # flag_dot_error = True
                             lexeme += character
                             state = 26
                         elif (character == "&" or character == "|"):
@@ -493,7 +489,6 @@ class LexicalAnalyzer:
                         else:
                             state = 26
                             lexeme += character
-                            # flag_dot_error = True
                     case 27:
                         if (flag): character = file.read(1)
 
