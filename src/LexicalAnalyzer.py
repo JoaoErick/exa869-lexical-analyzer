@@ -294,24 +294,27 @@ class LexicalAnalyzer:
                         if (character == "&"):
                             type = "LOG"
                             lexeme += character
+                            tokens.append(f"{line_index} <{type}, {lexeme}>")
+                            state = 0
+                            lexeme = ""
                         else:
                             print(f"Error TMF. In {file_name} file line: {line_index}")
-
-                        state = 0
-                        tokens.append(f"{line_index} <{type}, {lexeme}>")
-                        lexeme = ""
+                            lexeme += character
+                            state = 27
                     case 13:
                         if (flag): character = file.read(1)
 
                         if (character == "|"):
                             type = "LOG"
                             lexeme += character
+                            tokens.append(f"{line_index} <{type}, {lexeme}>")
+                            state = 0    
+                            lexeme = ""
                         else:
                             print(f"Error TMF. In {file_name} file line: {line_index}")
+                            lexeme += character
+                            state = 27
 
-                        state = 0
-                        tokens.append(f"{line_index} <{type}, {lexeme}>")
-                        lexeme = ""
                     case 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22:
                         state = 0
                         tokens.append(f"{line_index} <{type}, {lexeme}>")
@@ -464,6 +467,54 @@ class LexicalAnalyzer:
                             state = 26
                             lexeme += character
                             flag_dot_error = True
+                    case 27:
+                        if (flag): character = file.read(1)
+
+                        if (character == "&" or character == "|"):
+                            double_delimiter += character
+                            lexeme += character
+
+                            if (len(double_delimiter) == 2):
+                                if (double_delimiter == "&&" or 
+                                    double_delimiter == "||"
+                                ):
+                                    # Removendo delimitador duplo do lexema.
+                                    lexeme = lexeme[:len(lexeme) - 2]
+
+                                    type = "TMF"
+                                    errors_tokens.append(
+                                        f"{line_index} <{type}, {lexeme}>"
+                                    )
+                                    
+                                    # Gera o token do delimitador duplo
+                                    tokens.append(
+                                        f"{line_index} <LOG, {double_delimiter}>"
+                                    )
+
+                                    lexeme = ""
+                                    double_delimiter = ""
+                                    state = 0
+                                    flag = True
+                                else:
+                                    state = 27
+                                    double_delimiter = ""
+                            else:
+                                state = 27
+                        elif (
+                            character == " " or 
+                            character == "\n" or
+                            character == "" or
+                            character in delimiters
+                        ):
+                            type = "TMF"
+                            errors_tokens.append(
+                                f"{line_index} <{type}, {lexeme}>"
+                            )
+                            state = 0
+                            lexeme = ""
+                            flag = False
+                        else:
+                            lexeme += character
                     case _:
                         print(f"Error default case. In {file_name} file line: {line_index}")
                 
