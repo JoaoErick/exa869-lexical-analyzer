@@ -171,7 +171,7 @@ class LexicalAnalyzer:
                             character in delimiters
                         ):
                             if (flag_nmf_comment):
-                                type = "NFM"
+                                type = "NMF"
                                 errors_tokens.append(f"{line_index} <{type}, {lexeme}>")
                                 flag_nmf_comment = False
                             else:
@@ -297,7 +297,7 @@ class LexicalAnalyzer:
                             
                             if (flag_nmf_comment):
                                 # Removendo o '/' do lexema, para gerar o token de erro
-                                type = "NFM"
+                                type = "NMF"
                                 errors_tokens.append(f"{line_index} <{type}, {lexeme[:len(lexeme) - 2]}>")
                                 lexeme = lexeme.split(".")[1]
                                 flag_nmf_comment = False
@@ -309,7 +309,7 @@ class LexicalAnalyzer:
 
                             if (flag_nmf_comment):
                                 # Removendo o '/' do lexema, para gerar o token de erro
-                                type = "NFM"
+                                type = "NMF"
                                 errors_tokens.append(f"{line_index} <{type}, {lexeme[:len(lexeme) - 2]}>")
                                 lexeme = lexeme.split(".")[1]
                                 flag_nmf_comment = False
