@@ -13,7 +13,8 @@ def main():
     for file_name in file_handler.get_file_names():
         tokens, errors_tokens = lexical_analyzer.generate_tokens(path, file_name)
         file_handler.write_file(file_name, tokens,)
-        file_handler.write_file(file_name, errors_tokens, write_mode="a+")
+        if (len(errors_tokens) > 1):
+            file_handler.write_file(file_name, errors_tokens, write_mode="a+")
 
 if __name__ == "__main__":
     main()
