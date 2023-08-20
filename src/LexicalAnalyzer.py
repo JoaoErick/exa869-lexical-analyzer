@@ -46,8 +46,8 @@ class LexicalAnalyzer:
         with open(f"{path}/{file_name}.txt", "r") as file:
             eof: bool = False
             flag_character_error: bool = False
-            flag_nmf_comment: bool = False # TODO: Ver se n tem um nome melhor
-            flag_nmf_first_dot: bool = True # TODO: Ver se n tem um nome melhor
+            flag_nmf_comment: bool = False
+            flag_nmf_first_dot: bool = True
             double_delimiter: str = ""
             type: str = ""
             character: str = ""
@@ -75,7 +75,7 @@ class LexicalAnalyzer:
                             self.lexeme += character
                             self.state = 3
                         elif (character == ""):
-                            pass # TODO: Ver se não tem um jeito melhor
+                            pass # Sair do switch-case quando encontra o final do arquivo
                         else:
                             print(f"Error It's not a symbol. In {file_name} file line: {self.line_index}")
                             self.lexeme += character
