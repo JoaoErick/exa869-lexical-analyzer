@@ -26,6 +26,7 @@ class LexicalAnalyzer:
             flag: bool = True
             flag_character_error: bool = False
             flag_nmf_comment: bool = False # TODO: Ver se n tem um nome melhor
+            flag_nmf_first_dot: bool = True # TODO: Ver se n tem um nome melhor
             state: int = 0
             lexeme: str = ""
             double_delimiter: str = ""
@@ -519,6 +520,7 @@ class LexicalAnalyzer:
                         elif (character == "."):
                             lexeme += character
                             state = 26
+                            flag_nmf_first_dot = False
                         elif (character == "&" or character == "|"):
                             double_delimiter += character
                             lexeme += character
@@ -561,7 +563,7 @@ class LexicalAnalyzer:
                             character in delimiters
                         ):
                             # Se for delimitador após ponto
-                            if (character in delimiters):
+                            if (flag_nmf_first_dot and character in delimiters):
                                 if (lexeme[-1] == "."):
                                     if (character == "/"):
                                         flag_nmf_comment = True
@@ -570,28 +572,29 @@ class LexicalAnalyzer:
                                     else:
                                         state = 26
                                         lexeme += character
-
+                                    
+                                    flag_nmf_first_dot = True
                                     continue
-
-                            if (not search(r'^-?\d+(?:\.\d+)$', lexeme)):
+                                
+                            if (
+                                not search(r'^-?\d+(?:\.\d+)$', lexeme) or 
+                                not flag_nmf_first_dot
+                            ):
                                 print(f"Error NMF. In {file_name} file line: {line_index}")
                                 
                                 type = "NMF"
                                 errors_tokens.append(
                                     f"{line_index} <{type}, {lexeme}>"
                                 )
-                                state = 0
-                                lexeme = ""
-                                flag = False
                             else:
                                 if (lexeme != " "):
                                     tokens.append(
                                         f"{line_index} <{type}, {lexeme}>"
                                     )
-                                
-                                state = 0   
-                                lexeme = ""
-                                flag = False
+                            
+                            state = 0   
+                            lexeme = ""
+                            flag = False
                         else:
                             state = 26
                             lexeme += character
