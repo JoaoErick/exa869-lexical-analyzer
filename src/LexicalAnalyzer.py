@@ -45,18 +45,12 @@ class LexicalAnalyzer:
 
         with open(f"{path}/{file_name}.txt", "r") as file:
             eof: bool = False
-            # flag: bool = True
             flag_character_error: bool = False
             flag_nmf_comment: bool = False # TODO: Ver se n tem um nome melhor
             flag_nmf_first_dot: bool = True # TODO: Ver se n tem um nome melhor
-            # state: int = 0
-            # self.lexeme: str = ""
             double_delimiter: str = ""
             type: str = ""
-            # tokens: List[str] = []
-            # errors_tokens: List[str] = ["\n"]
             character: str = ""
-            # self.line_index: int = 1
             block_comment_start_line: int = 0
 
             self.__clean_lists__()
@@ -86,9 +80,6 @@ class LexicalAnalyzer:
                             print(f"Error It's not a symbol. In {file_name} file line: {self.line_index}")
                             self.lexeme += character
                             self.__reset__(clean_lexeme=False, flag=True, state=27)
-
-                            # self.state = 27
-                            # flag = True
 
                         self.flag_read_character = True
                     case 1: # Símbolo
@@ -156,19 +147,11 @@ class LexicalAnalyzer:
                             self.state = 23
                         else:
                             if (character == "\n" or character == "\t"):
-                                # state = 0
-                                # self.lexeme = ""
-
                                 self.__reset__(clean_lexeme=True, flag=True, state=0)
                             elif (character == " "):
-                                # self.state = 0
-                                
                                 if (self.lexeme != " "):
-                                    # self.tokens.append(f"{self.line_index} <{type}, {self.lexeme}>")
                                     self.__add_token__(type)
                                 
-                                # self.lexeme = ""
-                                # flag = True
                                 self.__reset__(
                                     clean_lexeme = True, 
                                     flag = True, 
@@ -176,8 +159,6 @@ class LexicalAnalyzer:
                                 )
                             else:
                                 print(f"Error Not a known symbol. In {file_name} file line: {self.line_index}")
-                                # state = 27
-                                # flag = True
                                 self.__reset__(
                                     clean_lexeme = False, 
                                     flag = True, 
@@ -207,15 +188,8 @@ class LexicalAnalyzer:
                                     self.lexeme = self.lexeme[:len(self.lexeme) - 2]
 
                                     if (not search(r'\d', self.lexeme)):
-                                        # type = "NMF"
-                                        # errors_tokens.append(
-                                        #     f"{self.line_index} <{type}, {self.lexeme}>"
-                                        # )
                                         self.__add_error_token__("NMF")
                                     else:
-                                        # tokens.append(
-                                        #     f"{self.line_index} <{type}, {self.lexeme}>"
-                                        # )
                                         self.__add_token__(type)
                                     
                                     # Gera o token do delimitador duplo
@@ -224,9 +198,6 @@ class LexicalAnalyzer:
                                     )
 
                                     double_delimiter = ""
-                                    # self.lexeme = ""
-                                    # state = 0
-                                    # flag = True
                                     self.__reset__(
                                         clean_lexeme = True, 
                                         flag = True, 
@@ -244,20 +215,12 @@ class LexicalAnalyzer:
                             character in self.delimiters
                         ):
                             if (flag_nmf_comment):
-                                # type = "NMF"
-                                # errors_tokens.append(f"{self.line_index} <{type}, {self.lexeme}>")
                                 self.__add_error_token__("NMF")
                                 flag_nmf_comment = False
                             else:
                                 if (self.lexeme != " "):
                                     self.__add_token__(type)
-                                    # tokens.append(
-                                    #     f"{self.line_index} <{type}, {self.lexeme}>"
-                                    # )
                             
-                            # state = 0
-                            # self.lexeme = ""
-                            # flag = False
                             self.__reset__(
                                 clean_lexeme = True, 
                                 flag = False, 
@@ -266,8 +229,6 @@ class LexicalAnalyzer:
                         else:
                             print(f"Error NMF. In {file_name} file line: {self.line_index}")
                             flag_nmf_comment = True
-                            # state = 2
-                            # flag = True
                             self.lexeme += character
                             self.__reset__(
                                 clean_lexeme = False, 
@@ -298,37 +259,17 @@ class LexicalAnalyzer:
 
                             if (self.lexeme in self.reserved_words):
                                 if (flag_character_error):
-                                    # type = "TMF"
-                                    # errors_tokens.append(
-                                    #     f"{self.line_index} <{type}, {self.lexeme}>"
-                                    # )
                                     self.__add_error_token__("TMF")
                                     flag_character_error = False
                                 else:
-                                    # tokens.append(
-                                    #     f"{self.line_index} <{type}, {self.lexeme}>"
-                                    # )
                                     self.__add_token__(type)
 
-                                # state = 0
-                                # self.lexeme = ""
                             else:
                                 if (flag_character_error):
-                                    # type = "IMF"
-                                    # errors_tokens.append(
-                                    #     f"{self.line_index} <{type}, {self.lexeme}>"
-                                    # )
                                     self.__add_error_token__("IMF")
                                     flag_character_error = False
                                 else:
-                                    # type = "IDE"
-                                    # tokens.append(
-                                    #     f"{self.line_index} <{type}, {self.lexeme}>"
-                                    # )
                                     self.__add_token__("IDE")
-
-                                # state = 0
-                                # self.lexeme = ""
 
                             self.__reset__(
                                 clean_lexeme = True, 
@@ -342,7 +283,6 @@ class LexicalAnalyzer:
                                 print(f"Error TMF. In {file_name} file line: {self.line_index}")
 
                             flag_character_error = True
-                            # self.state = 3
                             self.lexeme += character
                             self.__reset__(
                                 clean_lexeme = False, 
@@ -362,18 +302,12 @@ class LexicalAnalyzer:
                                 state = 0
                             )
                         else:
-                            # self.flag_read_character = False
                             self.__add_token__(type)
                             self.__reset__(
                                 clean_lexeme = True, 
                                 flag = False, 
                                 state = 0
                             )
-
-                        # self.tokens.append(f"{self.line_index} <{type}, {self.lexeme}>")
-                        # self.__add_token__(type)
-                        # self.state = 0
-                        # self.lexeme = ""
                     case 5:
                         if (self.flag_read_character): character = file.read(1)
 
@@ -387,7 +321,6 @@ class LexicalAnalyzer:
                                 state = 0
                             )
                         elif (character == ">"):
-                            # type = "DEL"
                             self.lexeme += character
                             self.__add_token__("DEL")
                             self.__reset__(
@@ -396,22 +329,16 @@ class LexicalAnalyzer:
                                 state = 0
                             )
                         else:
-                            # flag = False
                             self.__add_token__(type)
                             self.__reset__(
                                 clean_lexeme = True, 
                                 flag = False, 
                                 state = 0
                             )
-
-                        # state = 0
-                        # tokens.append(f"{self.line_index} <{type}, {self.lexeme}>")
-                        # self.lexeme = ""
                     case 6:
                         if (self.flag_read_character): character = file.read(1)
 
                         if (character == "/"):
-                            # type = "COM"
                             self.lexeme += character
                             self.__add_token__("COM")
                             self.__reset__(
@@ -420,17 +347,12 @@ class LexicalAnalyzer:
                                 state = 0
                             )
                         else:
-                            # flag = False
                             self.__add_token__(type)
                             self.__reset__(
                                 clean_lexeme = True, 
                                 flag = False, 
                                 state = 0
                             )
-
-                        # state = 0
-                        # tokens.append(f"{self.line_index} <{type}, {self.lexeme}>")
-                        # self.lexeme = ""
                     case 7:
                         if (self.flag_read_character): character = file.read(1)
 
@@ -439,12 +361,9 @@ class LexicalAnalyzer:
                             self.lexeme += character
                             
                             if (flag_nmf_comment):
-                                # Removendo o '/' do lexema, para gerar o token de erro
-                                # type = "NMF"
-                                # errors_tokens.append(f"{self.line_index} <{type}, {self.lexeme[:len(self.lexeme) - 2]}>")
                                 self.__add_error_token__(
                                     type = "NMF", 
-                                    lexeme = self.lexeme[:len(self.lexeme) - 2]
+                                    lexeme = self.lexeme[:len(self.lexeme) - 2] # Removendo o '/' do lexema, para gerar o token de erro
                                 )
                                 self.lexeme = self.lexeme.split(".")[1]
                                 flag_nmf_comment = False
@@ -455,13 +374,9 @@ class LexicalAnalyzer:
                             self.lexeme += character
 
                             if (flag_nmf_comment):
-                                # Removendo o '/' do lexema, para gerar o token de erro
-                                # type = "NMF"
-                                # errors_tokens.append(f"{self.line_index} <{type}, {self.lexeme[:len(self.lexeme) - 2]}>")
-                                # self.__add_error_token__("NMF")
                                 self.__add_error_token__(
                                     type = "NMF", 
-                                    lexeme = self.lexeme[:len(self.lexeme) - 2]
+                                    lexeme = self.lexeme[:len(self.lexeme) - 2] # Removendo o '/' do lexema, para gerar o token de erro
                                 )
                                 self.lexeme = self.lexeme.split(".")[1]
                                 flag_nmf_comment = False
@@ -471,18 +386,12 @@ class LexicalAnalyzer:
                         else:
                             if (flag_nmf_comment):
                                 flag_nmf_comment = False
-                                # state = 26
-                                # flag = False
                                 self.__reset__(
                                     clean_lexeme = False, 
                                     flag = False, 
                                     state = 26
                                 )
                             else:
-                                # tokens.append(f"{self.line_index} <{type}, {self.lexeme}>")
-                                # flag = False
-                                # state = 0
-                                # self.lexeme = ""
                                 self.__add_token__(type)
                                 self.__reset__(
                                     clean_lexeme = True, 
@@ -493,7 +402,6 @@ class LexicalAnalyzer:
                         if (self.flag_read_character): character = file.read(1)
 
                         if (character == "="):
-                            # type = "REL"
                             self.lexeme += character
                             self.__add_token__("REL")
                             self.__reset__(
@@ -502,26 +410,17 @@ class LexicalAnalyzer:
                                 state = 0
                             )
                         else:
-                            # flag = False
                             self.__add_token__(type)
                             self.__reset__(
                                 clean_lexeme = True, 
                                 flag = False, 
                                 state = 0
                             )
-
-                        # state = 0
-                        # tokens.append(f"{self.line_index} <{type}, {self.lexeme}>")
-                        # self.lexeme = ""
                     case 12:
                         if (self.flag_read_character): character = file.read(1)
 
                         if (character == "&"):
-                            # type = "LOG"
                             self.lexeme += character
-                            # tokens.append(f"{self.line_index} <{type}, {self.lexeme}>")
-                            # state = 0
-                            # self.lexeme = ""
                             self.__add_token__("LOG")
                             self.__reset__(
                                 clean_lexeme = True, 
@@ -534,12 +433,7 @@ class LexicalAnalyzer:
                             character == "" or
                             character in self.delimiters
                         ):
-                            # type = "TMF"
-                            # errors_tokens.append(f"{self.line_index} <{type}, {self.lexeme}>")
                             self.__add_error_token__("TMF")
-                            # state = 0
-                            # self.lexeme = ""
-                            # flag = False
                             self.__reset__(
                                 clean_lexeme = True, 
                                 flag = False, 
@@ -553,11 +447,7 @@ class LexicalAnalyzer:
                         if (self.flag_read_character): character = file.read(1)
 
                         if (character == "|"):
-                            # type = "LOG"
                             self.lexeme += character
-                            # tokens.append(f"{self.line_index} <{type}, {self.lexeme}>")
-                            # state = 0    
-                            # self.lexeme = ""
                             self.__add_token__("LOG")
                             self.__reset__(
                                 clean_lexeme = True, 
@@ -570,12 +460,7 @@ class LexicalAnalyzer:
                             character == "" or
                             character in self.delimiters
                         ):
-                            # type = "TMF"
-                            # errors_tokens.append(f"{self.line_index} <{type}, {self.lexeme}>")
                             self.__add_error_token__("TMF")
-                            # state = 0
-                            # self.lexeme = ""
-                            # flag = False
                             self.__reset__(
                                 clean_lexeme = True, 
                                 flag = False, 
@@ -586,9 +471,6 @@ class LexicalAnalyzer:
                             self.lexeme += character
                             self.state = 27
                     case 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22:
-                        # state = 0
-                        # tokens.append(f"{self.line_index} <{type}, {self.lexeme}>")
-                        # self.lexeme = ""
                         self.__add_token__(type)
                         self.__reset__(
                             clean_lexeme = True, 
@@ -602,18 +484,11 @@ class LexicalAnalyzer:
                             self.lexeme += character
 
                             if (flag_character_error):
-                                # type = "CMF"
-                                # errors_tokens.append(
-                                #     f"{self.line_index} <{type}, {self.lexeme}>"
-                                # )
                                 self.__add_error_token__("CMF")
                                 flag_character_error = False
                             else:
-                                # tokens.append(f"{self.line_index} <{type}, {self.lexeme}>")
                                 self.__add_token__(type)
 
-                            # state = 0
-                            # self.lexeme = ""
                             self.__reset__(
                                 clean_lexeme = True, 
                                 flag = True, 
@@ -621,14 +496,7 @@ class LexicalAnalyzer:
                             )
                         elif (character == '\n' or character == ""):
                             print(f"Error CMF. In {file_name} file line: {self.line_index}")
-                            # type = "CMF"
-                            # errors_tokens.append(
-                            #     f"{self.line_index} <{type}, {self.lexeme}>"
-                            # )
                             self.__add_error_token__("CMF")
-                            # state = 0
-                            # self.lexeme = ""
-                            # flag = False
                             flag_character_error = False
                             self.__reset__(
                                 clean_lexeme = True, 
@@ -663,8 +531,6 @@ class LexicalAnalyzer:
                             
                             if (character == "/"):
                                 type = "COM"
-                                # self.lexeme = ""
-                                # state = 0
                                 self.__reset__(
                                     clean_lexeme = True, 
                                     flag = True, 
@@ -688,32 +554,19 @@ class LexicalAnalyzer:
                         else:
                             if (flag_nmf_comment):
                                 flag_nmf_comment = False
-                                # state = 26
-                                # flag = False
                                 self.__reset__(
                                     clean_lexeme = False, 
                                     flag = False, 
                                     state = 26
                                 )
                             else:
-                                # type = "CoMF"
-
                                 if (block_comment_start_line < self.line_index):
                                     print(f"Error CoMF. In {file_name} file line: [{block_comment_start_line}-{self.line_index}]")
-                                    # errors_tokens.append(
-                                    #     f"[{block_comment_start_line}-{self.line_index}] <{type}, {self.lexeme}>"
-                                    # )
                                     self.__add_error_token__("CoMF", block_comment_start_line)
                                 else:
                                     print(f"Error CoMF. In {file_name} file line: {self.line_index}")
-                                    # errors_tokens.append(
-                                    #     f"{self.line_index} <{type}, {self.lexeme}>"
-                                    # )
                                     self.__add_error_token__("CoMF")
                                 
-                                # state = 0
-                                # self.lexeme = ""
-                                # flag = True
                                 self.__reset__(
                                     clean_lexeme = True, 
                                     flag = True, 
@@ -723,9 +576,6 @@ class LexicalAnalyzer:
                         if (self.flag_read_character): character = file.read(1)
 
                         if (character == '\n' or character == ""):
-                            # flag = False
-                            # self.lexeme = ""
-                            # state = 0
                             self.__reset__(
                                 clean_lexeme = True, 
                                 flag = False, 
@@ -743,8 +593,6 @@ class LexicalAnalyzer:
                         else:
                             if (flag_nmf_comment):
                                 flag_nmf_comment = False
-                                # state = 26
-                                # flag = False
                                 self.__reset__(
                                     clean_lexeme = False, 
                                     flag = False, 
@@ -752,14 +600,7 @@ class LexicalAnalyzer:
                                 )
                             else:
                                 print(f"Error CoMF. In {file_name} file line: {self.line_index}")
-                                # type = "CoMF"
-                                # errors_tokens.append(
-                                #     f"{self.line_index} <{type}, {self.lexeme}>"
-                                # )
                                 self.__add_error_token__("CoMF")
-                                # state = 0
-                                # self.lexeme = ""
-                                # flag = True
                                 self.__reset__(
                                     clean_lexeme = True, 
                                     flag = True, 
@@ -770,7 +611,7 @@ class LexicalAnalyzer:
                         
                         if (self.flag_read_character): character = file.read(1)
 
-                        if (search(r'\d', character)):  # Dígito
+                        if (search(r'\d', character)): # Dígito
                             self.lexeme += character
                             self.state = 26
                         elif (character == "."):
@@ -789,15 +630,8 @@ class LexicalAnalyzer:
                                     self.lexeme = self.lexeme[:len(self.lexeme) - 2]
 
                                     if (not search(r'^-?\d+(?:\.\d+)$', self.lexeme)):
-                                        # type = "NMF"
-                                        # errors_tokens.append(
-                                        #     f"{self.line_index} <{type}, {self.lexeme}>"
-                                        # )
                                         self.__add_error_token__("NMF")
                                     else:
-                                        # tokens.append(
-                                        #     f"{self.line_index} <{type}, {self.lexeme}>"
-                                        # )
                                         self.__add_token__(type)
                                     
                                     # Gera o token do delimitador duplo
@@ -806,9 +640,6 @@ class LexicalAnalyzer:
                                     )
 
                                     double_delimiter = ""
-                                    # self.lexeme = ""
-                                    # state = 0
-                                    # flag = True
                                     self.__reset__(
                                         clean_lexeme = True, 
                                         flag = True, 
@@ -844,23 +675,12 @@ class LexicalAnalyzer:
                                 not flag_nmf_first_dot
                             ):
                                 print(f"Error NMF. In {file_name} file line: {self.line_index}")
-                                
-                                # type = "NMF"
-                                # errors_tokens.append(
-                                #     f"{self.line_index} <{type}, {self.lexeme}>"
-                                # )
                                 self.__add_error_token__("NMF")
                             else:
                                 if (self.lexeme != " "):
-                                    # tokens.append(
-                                    #     f"{self.line_index} <{type}, {self.lexeme}>"
-                                    # )
                                     self.__add_token__(type)
                             
                             flag_nmf_first_dot = True
-                            # state = 0   
-                            # self.lexeme = ""
-                            # flag = False
                             self.__reset__(
                                 clean_lexeme = True, 
                                 flag = False, 
@@ -882,11 +702,6 @@ class LexicalAnalyzer:
                                 ):
                                     # Removendo delimitador duplo do lexema.
                                     self.lexeme = self.lexeme[:len(self.lexeme) - 2]
-
-                                    # type = "TMF"
-                                    # errors_tokens.append(
-                                    #     f"{self.line_index} <{type}, {self.lexeme}>"
-                                    # )
                                     self.__add_error_token__("TMF")
                                     
                                     # Gera o token do delimitador duplo
@@ -895,9 +710,6 @@ class LexicalAnalyzer:
                                     )
 
                                     double_delimiter = ""
-                                    # self.lexeme = ""
-                                    # state = 0
-                                    # flag = True
                                     self.__reset__(
                                         clean_lexeme = True, 
                                         flag = True, 
@@ -914,14 +726,7 @@ class LexicalAnalyzer:
                             character == "" or
                             character in self.delimiters
                         ):
-                            # type = "TMF"
-                            # errors_tokens.append(
-                            #     f"{self.line_index} <{type}, {self.lexeme}>"
-                            # )
                             self.__add_error_token__("TMF")
-                            # state = 0
-                            # self.lexeme = ""
-                            # flag = False
                             self.__reset__(
                                 clean_lexeme = True, 
                                 flag = False, 
