@@ -398,7 +398,7 @@ class LexicalAnalyzer:
                             lexeme += character
 
                             if (flag_character_error):
-                                type = "TMF"
+                                type = "CMF"
                                 errors_tokens.append(
                                     f"{line_index} <{type}, {lexeme}>"
                                 )
@@ -417,6 +417,7 @@ class LexicalAnalyzer:
                             state = 0
                             lexeme = ""
                             flag = False
+                            flag_character_error = False
                         elif (
                             search(r'[^\w\d]|_', character) or # Símbolo
                             search(r'\d', character) or # Dígito
@@ -436,7 +437,12 @@ class LexicalAnalyzer:
                         if (character == "*"):
                             lexeme += character
                             character = file.read(1)
-                            lexeme += character
+                            
+                            if (character != "\n" and character != "\t"):
+                                lexeme += character
+                            
+                            if (character == "\n"):
+                                line_index += 1
                             
                             if (character == "/"):
                                 type = "COM"
