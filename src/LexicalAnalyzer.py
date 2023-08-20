@@ -169,18 +169,24 @@ class LexicalAnalyzer:
                             character == "" or
                             character in delimiters
                         ):
-                            if (lexeme != " "):
-                                tokens.append(
-                                    f"{line_index} <{type}, {lexeme}>"
-                                )
+                            if (flag_nmf_comment):
+                                type = "NFM"
+                                errors_tokens.append(f"{line_index} <{type}, {lexeme}>")
+                                flag_nmf_comment = False
+                            else:
+                                if (lexeme != " "):
+                                    tokens.append(
+                                        f"{line_index} <{type}, {lexeme}>"
+                                    )
                             
                             state = 0
                             lexeme = ""
                             flag = False
                         else:
                             print(f"Error NMF. In {file_name} file line: {line_index}")
-                            state = 0
-                            lexeme = ""
+                            flag_nmf_comment = True
+                            state = 2
+                            lexeme += character
                             flag = True
                     case 3:
                         if (flag): character = file.read(1)
