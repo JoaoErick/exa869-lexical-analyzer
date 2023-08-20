@@ -5,6 +5,22 @@ class LexicalAnalyzer:
     """ Classe responsável por prover métodos para realizar a análise léxica.
     """
 
+    def __init__(self) -> None:
+        """ Método construtor.
+        """
+        
+        self.reserved_words: List[str] = [
+            "variables", "const", "class", "methods","objects", "main", 
+            "return", "if", "else", "then", "for", "read", "print", 
+            "void", "int", "real", "boolean", "string", "true", "false"
+        ]
+        self.delimiters: List[str] = [
+            ";", ",", ".", "(", ")", "[", "]", "{", "}",
+            "+", "-", "*", "/",
+            "=", "<", ">",
+            "!", "\t", '"'
+        ]
+
     def generate_tokens(self, path: str, file_name: str) -> Tuple[List[str], List[str]] | None:
         """ Realiza a análise léxica de um determinado arquivo, e gera uma lista
         com os tokens correspondentes.
@@ -36,17 +52,7 @@ class LexicalAnalyzer:
             character: str = ""
             line_index: int = 1
             block_comment_start_line: int = 0
-            reserved_words: List[str] = [
-                "variables", "const", "class", "methods","objects", "main", 
-                "return", "if", "else", "then", "for", "read", "print", 
-                "void", "int", "real", "boolean", "string", "true", "false"
-            ]
-            delimiters: List[str] = [
-                ";", ",", ".", "(", ")", "[", "]", "{", "}",
-                "+", "-", "*", "/",
-                "=", "<", ">",
-                "!", "\t", '"'
-            ]
+            
 
             while not eof:
                 match state:
@@ -168,7 +174,7 @@ class LexicalAnalyzer:
                             character == " " or 
                             character == "\n" or
                             character == "" or
-                            character in delimiters
+                            character in self.delimiters
                         ):
                             if (flag_nmf_comment):
                                 type = "NMF"
@@ -207,11 +213,11 @@ class LexicalAnalyzer:
                             character == " " or 
                             character == "\n" or
                             character == "" or
-                            character in delimiters
+                            character in self.delimiters
                         ):
                             flag = False
 
-                            if (lexeme in reserved_words):
+                            if (lexeme in self.reserved_words):
                                 if (flag_character_error):
                                     type = "TMF"
                                     errors_tokens.append(
@@ -351,7 +357,7 @@ class LexicalAnalyzer:
                             character == " " or 
                             character == "\n" or
                             character == "" or
-                            character in delimiters
+                            character in self.delimiters
                         ):
                             type = "TMF"
                             errors_tokens.append(f"{line_index} <{type}, {lexeme}>")
@@ -375,7 +381,7 @@ class LexicalAnalyzer:
                             character == " " or 
                             character == "\n" or
                             character == "" or
-                            character in delimiters
+                            character in self.delimiters
                         ):
                             type = "TMF"
                             errors_tokens.append(f"{line_index} <{type}, {lexeme}>")
@@ -566,10 +572,10 @@ class LexicalAnalyzer:
                             character == " " or 
                             character == "\n" or
                             character == "" or
-                            character in delimiters
+                            character in self.delimiters
                         ):
                             # Se for delimitador após ponto
-                            if (flag_nmf_first_dot and character in delimiters):
+                            if (flag_nmf_first_dot and character in self.delimiters):
                                 if (lexeme[-1] == "."):
                                     if (character == "/"):
                                         flag_nmf_comment = True
@@ -642,7 +648,7 @@ class LexicalAnalyzer:
                             character == " " or 
                             character == "\n" or
                             character == "" or
-                            character in delimiters
+                            character in self.delimiters
                         ):
                             type = "TMF"
                             errors_tokens.append(
