@@ -164,7 +164,7 @@ class LexicalAnalyzer:
                                     flag = True, 
                                     state = 27
                                 )
-                    case 2:
+                    case 2: # Número inteiro
                         type = "NRO"
 
                         if (self.flag_read_character): character = file.read(1)
@@ -235,7 +235,7 @@ class LexicalAnalyzer:
                                 flag = True, 
                                 state = 2
                             )
-                    case 3:
+                    case 3: # Letra
                         if (self.flag_read_character): character = file.read(1)
 
                         if (
@@ -255,8 +255,6 @@ class LexicalAnalyzer:
                             character == "" or
                             character in self.delimiters
                         ):
-                            # flag = False
-
                             if (self.lexeme in self.reserved_words):
                                 if (flag_character_error):
                                     self.__add_error_token__("TMF")
@@ -312,7 +310,6 @@ class LexicalAnalyzer:
                         if (self.flag_read_character): character = file.read(1)
 
                         if (character == "-"):
-                            # type = "ART"
                             self.lexeme += character
                             self.__add_token__("ART")
                             self.__change_state__(
@@ -546,7 +543,7 @@ class LexicalAnalyzer:
                             search(r'[^\w\d]|_', character) or # Símbolo
                             search(r'\d', character) or # Dígito
                             search(r'[a-zA-Z]', character) or # Letra
-                            search(r'[À-ÖØ-öø-ÿ]', character) # Letras com acentuação
+                            search(r'[À-ÖØ-öø-ÿ]', character) # Letra com acentuação
                         ): 
                             type = "COM"
                             self.state = 24
@@ -585,7 +582,7 @@ class LexicalAnalyzer:
                             search(r'[^\w\d]|_', character) or # Símbolo
                             search(r'\d', character) or # Dígito
                             search(r'[a-zA-Z]', character) or # Letra
-                            search(r'[À-ÖØ-öø-ÿ]', character) # Letras com acentuação
+                            search(r'[À-ÖØ-öø-ÿ]', character) # Letra com acentuação
                         ): 
                             type = "COM"
                             self.lexeme += character
