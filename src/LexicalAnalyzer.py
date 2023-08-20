@@ -595,6 +595,7 @@ class LexicalAnalyzer:
                             state = 0   
                             lexeme = ""
                             flag = False
+                            flag_nmf_first_dot = True
                         else:
                             state = 26
                             lexeme += character
