@@ -677,6 +677,7 @@ class LexicalAnalyzer:
                                 if (self.lexeme != " "):
                                     self.__add_token__(type)
                             
+                            double_delimiter = ""
                             flag_nmf_first_dot = True
                             self.__change_state__(
                                 clean_lexeme = True, 
