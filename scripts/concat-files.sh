@@ -8,7 +8,7 @@ rm "$files_folder/merged.txt"
 touch "$files_folder/merged.txt"
 
 # Removendo os arquivos de saída.
-rm "$files_folder/*-saida.txt"
+rm $files_folder/*-saida.txt
 
 # Iterar pelos arquivos com terminação "-saida" na pasta "backup"
 for file in "$files_folder"/*.txt; do
