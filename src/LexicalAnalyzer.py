@@ -21,7 +21,7 @@ class LexicalAnalyzer:
             "!", "\t", '"'
         ]
         self.tokens: List[str] = []
-        self.errors_tokens: List[str] = ["\n"]
+        self.errors_tokens: List[str] = []
         self.state: int = 0
         self.lexeme: str = ""
         self.line_index: int = 1
@@ -823,4 +823,4 @@ class LexicalAnalyzer:
         """
         
         self.tokens = []
-        self.errors_tokens = ["\n"]
+        self.errors_tokens = ["\nERROS:"]
