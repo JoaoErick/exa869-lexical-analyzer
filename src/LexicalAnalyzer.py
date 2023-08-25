@@ -165,18 +165,23 @@ class LexicalAnalyzer:
                                     state = 27
                                 )
                     case 2: # Número inteiro
-                        type = "NRO"
-
                         if (self.flag_read_character): character = file.read(1)
 
                         if (search(r'\d', character)):  # Dígito
+                            type = "NRO"
                             self.lexeme += character
                             self.state = 2
                         elif (character == "."):
-                            type = "NRO"
+                            if (type == "NMF"):
+                                self.state = 2
+                                flag_nmf_comment = True
+                            else:
+                                type = "NRO"
+                                self.state = 26
+
                             self.lexeme += character
-                            self.state = 26
                         elif (character == "&" or character == "|"):
+                            type = "NMF"
                             double_delimiter += character
                             self.lexeme += character
 
@@ -184,6 +189,8 @@ class LexicalAnalyzer:
                                 if (double_delimiter == "&&" or 
                                     double_delimiter == "||"
                                 ):
+                                    type = "NRO"
+
                                     # Removendo delimitador duplo do lexema.
                                     self.lexeme = self.lexeme[:len(self.lexeme) - 2]
 
@@ -204,6 +211,7 @@ class LexicalAnalyzer:
                                         state = 0
                                     )
                                 else:
+                                    type = "NMF"
                                     double_delimiter = ""
                                     self.state = 26
                             else:
@@ -219,7 +227,7 @@ class LexicalAnalyzer:
                                 flag_nmf_comment = False
                             else:
                                 if (self.lexeme != " "):
-                                    self.__add_token__(type)
+                                    self.__add_token__("NRO")
                             
                             self.__change_state__(
                                 clean_lexeme = True, 
@@ -228,6 +236,7 @@ class LexicalAnalyzer:
                             )
                         else:
                             print(f"Error NMF. In {file_name} file line: {self.line_index}")
+                            type = "NMF"
                             flag_nmf_comment = True
                             self.lexeme += character
                             self.__change_state__(
