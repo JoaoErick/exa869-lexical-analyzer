@@ -10,7 +10,7 @@ Analisador léxico construído como forma de avaliação para a disciplina EXA86
 ### :computer: Tecnologias
 - [Python 3.10+](https://www.python.org/)
 
-### Tabela da estrutura léxica da linguagem
+### :clipboard: Tabela da estrutura léxica da linguagem
 <table>
     <tbody>
         <tr>
@@ -121,7 +121,7 @@ Analisador léxico construído como forma de avaliação para a disciplina EXA86
     </tbody>
 </table>
 
-## Como usar
+## :memo: Como usar
 1. Clonar este repositório;
 2. Garanta que existe a versão 3.10+ do python instalada na sua máquina;
 3. Coloque um ou mais arquivos de entrada `.txt` no diretório `src/files`;
@@ -129,7 +129,7 @@ Analisador léxico construído como forma de avaliação para a disciplina EXA86
     ```python
     python src/main.py
     ```
-5. Os arquivos de saída estarão armazenados no diretório `src/files`.
+5. Os arquivos de saída onde estarão contidos os tokens provenientes da análise léxica serão armazenados no diretório `src/files`.
 
 ## :pushpin: Autores ##
 - Allan Capistrano: [Github](https://github.com/AllanCapistrano) - [Linkedin](https://www.linkedin.com/in/allancapistrano/) - [E-mail](https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&source=mailto&to=asantos@ecomp.uefs.br)
