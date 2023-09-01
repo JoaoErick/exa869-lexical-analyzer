@@ -12,7 +12,8 @@ class LexicalAnalyzer:
         self.reserved_words: List[str] = [
             "variables", "const", "class", "methods","objects", "main", 
             "return", "if", "else", "then", "for", "read", "print", 
-            "void", "int", "real", "boolean", "string", "true", "false"
+            "void", "int", "real", "boolean", "string", "true", "false",
+            "this", "constructor"
         ]
         self.delimiters: List[str] = [
             ";", ",", ".", "(", ")", "[", "]", "{", "}",
