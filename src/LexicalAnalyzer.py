@@ -13,7 +13,7 @@ class LexicalAnalyzer:
             "variables", "const", "class", "methods","objects", "main", 
             "return", "if", "else", "then", "for", "read", "print", 
             "void", "int", "real", "boolean", "string", "true", "false",
-            "this", "constructor"
+            "this", "constructor", "extends"
         ]
         self.delimiters: List[str] = [
             ";", ",", ".", "(", ")", "[", "]", "{", "}",
