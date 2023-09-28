@@ -2,3 +2,6 @@
 lexical-analyzer/files/*.txt
 __pycache__/
 backup/
+build/
+dist/
+lexical_analyzer.egg-info/
