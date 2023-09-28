@@ -122,14 +122,21 @@ Analisador léxico construído como forma de avaliação para a disciplina EXA86
 </table>
 
 ## :memo: Como usar
+
+### Via projeto 
 1. Clonar este repositório;
 2. Garanta que existe a versão 3.10+ do python instalada na sua máquina;
-3. Coloque um ou mais arquivos de entrada `.txt` no diretório `src/files`;
+3. Coloque um ou mais arquivos de entrada `.txt` no diretório `lexical_analyzer/files`;
 4. Execute o projeto utilizando o comando:
     ```python
-    python src/main.py
+    python lexical_analyzer/main.py
     ```
-5. Os arquivos de saída onde estarão contidos os tokens provenientes da análise léxica serão armazenados no diretório `src/files`.
+5. Os arquivos de saída onde estarão contidos os tokens provenientes da análise léxica serão armazenados no diretório `lexical_analyzer/files`.
+
+### Via módulo
+```powershell
+pip install -U git+https://github.com/JoaoErick/exa869-lexical-analyzer.git
+```
 
 ## :pushpin: Autores ##
 - Allan Capistrano: [Github](https://github.com/AllanCapistrano) - [Linkedin](https://www.linkedin.com/in/allancapistrano/) - [E-mail](https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&source=mailto&to=asantos@ecomp.uefs.br)
