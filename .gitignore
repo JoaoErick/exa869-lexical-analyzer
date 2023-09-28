@@ -1,5 +1,5 @@
 /venv/
-lexical-analyzer/files/*.txt
+lexical_analyzer/files/*.txt
 __pycache__/
 backup/
 build/
