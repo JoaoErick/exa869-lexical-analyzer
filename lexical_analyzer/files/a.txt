@@ -1,0 +1,168 @@
+const {
+    int sete = 4, oito = 25;
+    real um = 4, dois = 1.1;
+    string variavel="false", variavel2="4";
+    boolean teste = false;
+    boolean teste_2 = true;
+}
+variables {
+    int a, b, c;
+    boolean aa, a_2;
+    real b0_c;
+    int sete[a], oito[3];
+    real um[90], dois, tres4quatro;
+    string variavel, variavel2[2];
+    boolean teste[5], aaa;
+
+}
+class a{
+    variables{}
+    objects{}
+    methods{
+        int metodo1(Pessoa p, int a, Object ob, boolean b, real c){
+            variables {}
+            objects {}
+            this->metodo3();
+            this->metodo4(a, 3, b, 5, 6);
+            return a;
+        }
+        void metodo2(){
+            variables {real c; int b;}
+            objects {Pessoa person;}
+        
+            this.attribute;
+            this->metodo3();
+            this->metodo4(a, 3, b, 5, 6);
+            if (REL) then {
+                this->metodo3();
+                this.attribute;
+            } else {
+                person.cloth.t_shirt.model->set("oversized");
+                house.bathroom;
+                vehicle.car->drive();
+                vehicle->add("motorcycle");
+            }
+    
+            return;
+        }
+    }
+    constructor () {
+        variables{}
+        objects{}
+        if (a > 2) then {
+            print("asdasa");
+        }
+    }
+}
+class a extends a{
+    variables{}
+    
+    objects {
+        Pessoa pessoa[100];
+        Livro livro[tamanho];
+    }
+    
+    methods{}
+    
+    constructor (Math math, int a) {
+        variables{}
+        objects{}
+        a = b+2;
+    }
+}
+
+class main{
+    variables {
+        boolean flag;
+    }
+    objects {
+        Math mat;
+    }
+    methods{ 
+        void main(){
+            variables {}
+            objects {}
+            print(a);
+            print("a");
+            print(mat.sum);
+            print(b[c]);
+            read(mat.mult);
+            read(b[3]);
+            read(b[c]);
+            a = 5;
+            j_2 = 5;
+            b[6][6] = "oi";
+            teste = [1,2,3, [2]];
+            teste2 = ["aaaa", 4, a, [90, 91]];
+            teste1 = [1,2,30,[1,2,[2,1,5]],0,[1],[0,[2,3,5]]];
+            teste2 = [1, "teste", [5, a], testando];
+            teste3 = 90;
+            teste4 = 57.9;
+            teste5 = "testando123";
+            teste6[a][2][0][4] = "aaaaaa";
+            teste7[3][2][0][4] = 5;
+            test8[j][k] = 5;
+            ue = mat.division.rest;
+            opa = mat->sqrt(3);
+            opaa = mat->sqrt(3, 5, 6, aa, "aa");
+            opaa = a.a.a.a.a.a.a.a.a.a.a.a.a.a->a("aaa");
+            mat.integer.ten = 10;
+            mat.integer = mat.sum;
+            conta = 2+2+2/2*2;
+            conta = (2+2+2)/(2*2);
+            conta = (4 * (5 + 1)) / ((2 + 3) * (8 - 6));
+            if (opa > 2) then {
+                this->metodo3();
+            }
+            if (mat->calc(2, 2) > 1) then {
+                this->metodo3();
+            }
+            if (this.mat->calc(2, 2) > 1) then {
+                this->metodo3();
+            }
+            if (this->calc(2, 2) > 1) then {
+                this->metodo3();
+            }
+            if (!test) then {
+                this->metodo3();
+            }
+            if (test && test_2) then {
+                this->metodo3();
+            }
+            if (test || false) then {
+                this->metodo3();
+            }
+            if ((t > 2) || false) then {
+                this->metodo3();
+            }
+            if ((t > 2) && (b <3)) then {
+                this->metodo3();
+            }
+            not = !yes;
+            not = yes && yes;
+            not = yes || not;
+            for(i=1;i>=10;i++){
+                this->metodo3();
+            }
+            for(i=1;i>=10;i--){
+                this->metodo3();
+            }
+            for(i=1;i>=10;i=i-1){
+                this->metodo3();
+            }
+            for(i=1;i>=10;i=i+1){
+                this->metodo3();
+            }
+            
+            return;
+        }
+         int metodo1(Pessoa p, int a, Object ob, boolean b, real c){
+            variables {}
+            objects {}
+            this.attribute;
+            this->metodo3();
+            this->metodo4(a, 3, b, 5, 6);
+            return a;
+        }
+    }
+}
