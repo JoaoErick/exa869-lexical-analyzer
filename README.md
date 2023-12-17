@@ -10,6 +10,10 @@ Analisador léxico construído como forma de avaliação para a disciplina EXA86
 ### :computer: Tecnologias
 - [Python 3.10+](https://www.python.org/)
 
+### :boat: Navegação pelos projetos: ###
+- \> Lexical Analyzer
+- [Syntax and Semantic Parser](https://github.com/AllanCapistrano/exa869-syntax-and-semantic-parser/tree/syntax-parser)
+
 ### :clipboard: Tabela da estrutura léxica da linguagem
 <table>
     <tbody>
